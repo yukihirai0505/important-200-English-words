@@ -7,7 +7,10 @@ class App extends Component {
 
   constructor() {
     super()
-    this.state = {words: []}
+    this.state = {
+      currentNum: 0,
+      words: []
+    }
   }
 
   getWords() {
@@ -22,6 +25,9 @@ class App extends Component {
 
 
   render() {
+    const {currentNum, words} = this.state
+    let currentWord = words[currentNum]
+    console.log(currentWord);
     return (
       <div className="App">
         <header className="App-header">
@@ -29,7 +35,9 @@ class App extends Component {
           <h1 className="App-title">Important 200 English words</h1>
         </header>
         <p className="App-intro">
-          Hi
+          {currentWord &&
+          <p>{currentWord.level} {currentWord.word} {currentWord.japanese} {currentWord.example}</p>
+          }
         </p>
       </div>
     );
