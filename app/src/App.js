@@ -35,12 +35,22 @@ class App extends Component {
           <h1 className="App-title">Important 200 English words</h1>
         </header>
         <p className="App-intro">
-          {currentWord &&
-          <p>{currentWord.level} {currentWord.word} {currentWord.japanese} {currentWord.example}</p>
-          }
+          {displayQuestion(currentWord, currentNum + 1)}
         </p>
       </div>
     );
+  }
+}
+
+function displayQuestion(currentWord, questionNum) {
+  if (currentWord) {
+    let level = currentWord.level,
+      word = currentWord.word,
+      japanese = currentWord.japanese,
+      example = currentWord.example.replace(word.slice(1), '______')
+
+
+    return (<p>{questionNum}問目 {example}</p>);
   }
 }
 
