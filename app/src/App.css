@@ -31,6 +31,8 @@
   }
 }
 
+/* Input */
+
 .App-input {
   padding: 0.8em;
   outline: none;
@@ -49,6 +51,18 @@
   width: 300px;
 }
 
+.App-input-icon {
+  margin-right: 0.8em;
+}
+
+/* Button */
+
+/* Colors */
+
 .App-attention {
-  color: red;
+  color: #e74c3c;
+}
+
+.App-success {
+  color: #2ecc71;
 }

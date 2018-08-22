@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import logo from './logo.svg'
 import './App.css'
 import {getQuestions} from './utils/api'
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 
 class App extends Component {
 
@@ -15,6 +16,8 @@ class App extends Component {
         example: '',
         translation: ''
       },
+      correctFlg: false,
+      showAnswerFlg: false,
       questions: []
     }
   }
@@ -32,18 +35,28 @@ class App extends Component {
     this.setQuestions()
   }
 
+  // TODO: 正解をみる
+  checkAnswer() {
+
+  }
+
   answer(e) {
     const {currentNum, currentQuestion, questions} = this.state
+    e.persist(); // ref: https://stackoverflow.com/questions/432493/how-do-you-access-the-matched-groups-in-a-javascript-regular-expression
     let input = e.target.value;
     console.log(input);
     if (currentQuestion) {
       if (input === currentQuestion.word) {
-        let nextNum = currentNum + 1
-        this.setState({
-          currentNum: nextNum,
-          currentQuestion: questions[nextNum]
-        })
-        e.target.value = ''
+        this.setState({correctFlg: true})
+        setTimeout(() => {
+          let nextNum = currentNum + 1
+          this.setState({
+            currentNum: nextNum,
+            currentQuestion: questions[nextNum],
+            correctFlg: false
+          })
+          e.target.value = ''
+        }, 1000);
       }
     }
   }
@@ -67,6 +80,15 @@ class App extends Component {
   }
 
   render() {
+    const {correctFlg} = this.state
+    let fontAwesome = correctFlg ?
+      {
+        icon: 'check-circle',
+        className: 'App-success'
+      } : {
+        icon: 'check',
+        className: 'App-attention'
+      }
     return (
       <div className="App">
         <header className="App-header">
@@ -75,6 +97,7 @@ class App extends Component {
         </header>
         <div className="App-intro">
           {this.displayQuestion()}
+          <FontAwesomeIcon icon={fontAwesome.icon} className={fontAwesome.className + ' App-input-icon'}/>
           <input className="App-input" type="text" onChange={e => this.answer(e)}/>
         </div>
       </div>
