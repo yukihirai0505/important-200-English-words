@@ -1,7 +1,7 @@
-import React, {Component} from 'react';
-import logo from './logo.svg';
-import './App.css';
-import {getWords} from './utils/api';
+import React, {Component} from 'react'
+import logo from './logo.svg'
+import './App.css'
+import {getQuestions} from './utils/api'
 
 class App extends Component {
 
@@ -15,25 +15,25 @@ class App extends Component {
         example: '',
         translation: ''
       },
-      words: []
+      questions: []
     }
   }
 
-  setWords() {
+  setQuestions() {
     const {currentNum} = this.state
-    getWords().then(words => {
-      let currentQuestion = words[currentNum]
+    getQuestions().then(questions => {
+      let currentQuestion = questions[currentNum]
       console.log(currentQuestion);
-      this.setState({words, currentQuestion});
+      this.setState({questions, currentQuestion});
     });
   }
 
   componentWillMount() {
-    this.setWords()
+    this.setQuestions()
   }
 
   answer(e) {
-    const {currentNum, currentQuestion, words} = this.state
+    const {currentNum, currentQuestion, questions} = this.state
     let input = e.target.value;
     console.log(input);
     if (currentQuestion) {
@@ -41,7 +41,7 @@ class App extends Component {
         let nextNum = currentNum + 1
         this.setState({
           currentNum: nextNum,
-          currentQuestion: words[nextNum]
+          currentQuestion: questions[nextNum]
         })
         e.target.value = ''
       }
