@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import logo from './logo.svg'
 import './App.css'
-import {getQuestions} from './utils/api'
+import {getQuestions, getPhotos} from './utils/api'
 import {shuffleArray} from './utils/shuffle'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 
@@ -21,24 +21,32 @@ class App extends Component {
       correctFlg: false,
       showAnswerFlg: false,
       finishFlg: false,
-      questions: []
+      questions: [],
+      photos: []
     }
   }
 
-  setQuestions() {
+  componentWillMount() {
     const {currentNum} = this.state
     getQuestions().then(questions => {
       let _questions = shuffleArray(questions);
       let currentQuestion = _questions[currentNum]
-      this.setState({
-        currentQuestion,
-        questions: _questions
-      });
+      let keyword = currentQuestion.word
+      if (keyword) {
+        this.setState({
+          currentQuestion,
+          questions: _questions,
+        });
+        this.setPhotos(keyword)
+      }
     });
   }
 
-  componentWillMount() {
-    this.setQuestions()
+  setPhotos(keyword) {
+    getPhotos(keyword).then(data => {
+      let photos = data.info.photo
+      this.setState({photos});
+    })
   }
 
   checkAnswer() {
@@ -53,18 +61,21 @@ class App extends Component {
       if (input === currentQuestion.word) {
         this.setState({correctFlg: true})
         let nextNum = currentNum + 1
+        let nextQuestin = questions[nextNum];
         if (nextNum === questions.length) {
           this.setState({finishFlg: true});
         } else {
           setTimeout(() => {
             this.setState({
               currentNum: nextNum,
-              currentQuestion: questions[nextNum],
+              currentQuestion: nextQuestin,
               correctFlg: false,
-              showAnswerFlg: false
+              showAnswerFlg: false,
+              photos: []
             })
+            this.setPhotos(nextQuestin.word)
             e.target.value = ''
-          }, 1000);
+          }, 500);
         }
       }
     }
@@ -89,6 +100,18 @@ class App extends Component {
           }
         </div>
       );
+    }
+  }
+
+  renderPhotos() {
+    const {photos} = this.state
+    if (Array.isArray(photos)) {
+      return photos.map((photo) => {
+        console.log(photo)
+        return (<div>
+          <img src={photo.image_url} alt=""/>
+        </div>)
+      })
     }
   }
 
@@ -118,6 +141,7 @@ class App extends Component {
           {!showAnswerFlg &&
           <button className="App-show-btn" onClick={() => this.checkAnswer()}>答えを見る</button>
           }
+          {this.renderPhotos()}
         </div>
       </div>
     );
