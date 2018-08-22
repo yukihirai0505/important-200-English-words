@@ -9,48 +9,71 @@ class App extends Component {
     super()
     this.state = {
       currentNum: 0,
+      currentQuestion: {
+        level: '',
+        word: '',
+        example: ''
+      },
       words: []
     }
   }
 
-  getWords() {
+  setWords() {
+    const {currentNum} = this.state
     getWords().then(words => {
-      this.setState({words})
+      let currentQuestion = words[currentNum]
+      console.log(currentQuestion);
+      this.setState({words, currentQuestion});
     });
   }
 
   componentWillMount() {
-    this.getWords()
+    this.setWords()
   }
 
+  answer(input) {
+    const {currentNum, currentQuestion, words} = this.state
+    console.log(input);
+    if (currentQuestion) {
+      if (input === currentQuestion.word) {
+        let nextNum = currentNum + 1
+        this.setState({
+          currentNum: nextNum,
+          currentQuestion: words[nextNum]
+        })
+      }
+    }
+  }
+
+  displayQuestion() {
+    const {currentNum, currentQuestion} = this.state
+    if (currentQuestion) {
+      let level = currentQuestion.level,
+        word = currentQuestion.word,
+        example = currentQuestion.example.replace(word.slice(2), '<span class="App-attention">______</span>')
+
+      return (
+        <div>
+          <p>レベル: {level}</p>
+          <p>{currentNum + 1}問目 <span dangerouslySetInnerHTML={{__html: example}}/></p>
+        </div>
+      );
+    }
+  }
 
   render() {
-    const {currentNum, words} = this.state
-    let currentWord = words[currentNum]
-    console.log(currentWord);
     return (
       <div className="App">
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo"/>
           <h1 className="App-title">Important 200 English words</h1>
         </header>
-        <p className="App-intro">
-          {displayQuestion(currentWord, currentNum + 1)}
-        </p>
+        <div className="App-intro">
+          {this.displayQuestion()}
+          <input className="App-input" type="text" onChange={e => this.answer(e.target.value)}/>
+        </div>
       </div>
     );
-  }
-}
-
-function displayQuestion(currentWord, questionNum) {
-  if (currentWord) {
-    let level = currentWord.level,
-      word = currentWord.word,
-      japanese = currentWord.japanese,
-      example = currentWord.example.replace(word.slice(1), '______')
-
-
-    return (<p>{questionNum}問目 {example}</p>);
   }
 }
 
