@@ -135,7 +135,7 @@ class App extends Component {
       <div className="App">
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo"/>
-          <h1 className="App-title">200 most important words in English</h1>
+          <h1 className="App-title">The 200 most important words in English</h1>
         </header>
         <div className="App-intro">
           {finishFlg &&
