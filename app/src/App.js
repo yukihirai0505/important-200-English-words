@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import logo from './logo.svg'
 import './App.css'
 import {getQuestions} from './utils/api'
+import {shuffleArray} from './utils/shuffle'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 
 class App extends Component {
@@ -13,6 +14,7 @@ class App extends Component {
       currentQuestion: {
         level: '',
         word: '',
+        japanese: '',
         example: '',
         translation: ''
       },
@@ -25,9 +27,12 @@ class App extends Component {
   setQuestions() {
     const {currentNum} = this.state
     getQuestions().then(questions => {
-      let currentQuestion = questions[currentNum]
-      console.log(currentQuestion);
-      this.setState({questions, currentQuestion});
+      let _questions = shuffleArray(questions);
+      let currentQuestion = _questions[currentNum]
+      this.setState({
+        currentQuestion,
+        questions: _questions
+      });
     });
   }
 
@@ -35,25 +40,26 @@ class App extends Component {
     this.setQuestions()
   }
 
-  // TODO: 正解をみる
   checkAnswer() {
-
+    this.setState({showAnswerFlg: true})
   }
 
   answer(e) {
     const {currentNum, currentQuestion, questions} = this.state
     e.persist(); // ref: https://stackoverflow.com/questions/432493/how-do-you-access-the-matched-groups-in-a-javascript-regular-expression
     let input = e.target.value;
-    console.log(input);
     if (currentQuestion) {
       if (input === currentQuestion.word) {
         this.setState({correctFlg: true})
+        // TODO: check final answer or not
+
         setTimeout(() => {
           let nextNum = currentNum + 1
           this.setState({
             currentNum: nextNum,
             currentQuestion: questions[nextNum],
-            correctFlg: false
+            correctFlg: false,
+            showAnswerFlg: false
           })
           e.target.value = ''
         }, 1000);
@@ -62,10 +68,11 @@ class App extends Component {
   }
 
   displayQuestion() {
-    const {currentNum, currentQuestion} = this.state
+    const {currentNum, currentQuestion, showAnswerFlg} = this.state
     if (currentQuestion) {
       let level = currentQuestion.level,
         word = currentQuestion.word,
+        japanese = currentQuestion.japanese,
         example = currentQuestion.example.replace(word.slice(2), '<span class="App-attention">______</span>'),
         translation = currentQuestion.translation
 
@@ -74,13 +81,16 @@ class App extends Component {
           <p>レベル: {level}</p>
           <p>{currentNum + 1}問目 <span dangerouslySetInnerHTML={{__html: example}}/></p>
           <p>{translation}</p>
+          {showAnswerFlg &&
+          <p>答え: {word}<br/>意味: {japanese}</p>
+          }
         </div>
       );
     }
   }
 
   render() {
-    const {correctFlg} = this.state
+    const {correctFlg, showAnswerFlg} = this.state
     let fontAwesome = correctFlg ?
       {
         icon: 'check-circle',
@@ -99,6 +109,9 @@ class App extends Component {
           {this.displayQuestion()}
           <FontAwesomeIcon icon={fontAwesome.icon} className={fontAwesome.className + ' App-input-icon'}/>
           <input className="App-input" type="text" onChange={e => this.answer(e)}/>
+          {!showAnswerFlg &&
+          <button className="App-show-btn" onClick={() => this.checkAnswer()}>答えを見る</button>
+          }
         </div>
       </div>
     );
