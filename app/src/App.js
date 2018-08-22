@@ -122,9 +122,9 @@ class App extends Component {
     if (Array.isArray(photos)) {
       return photos.map((photo) => {
         console.log(photo)
-        return (<div>
+        return (
           <img src={photo.image_url} alt=""/>
-        </div>)
+        )
       })
     }
   }
@@ -142,7 +142,9 @@ class App extends Component {
           <p>お疲れ様でした</p>
           }
           {this.displayQuestion()}
-          {this.renderPhotos()}
+          <div className="App-photo">
+            {this.renderPhotos()}
+          </div>
         </div>
       </div>
     );
