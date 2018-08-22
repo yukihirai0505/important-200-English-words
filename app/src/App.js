@@ -32,8 +32,9 @@ class App extends Component {
     this.setWords()
   }
 
-  answer(input) {
+  answer(e) {
     const {currentNum, currentQuestion, words} = this.state
+    let input = e.target.value;
     console.log(input);
     if (currentQuestion) {
       if (input === currentQuestion.word) {
@@ -42,6 +43,7 @@ class App extends Component {
           currentNum: nextNum,
           currentQuestion: words[nextNum]
         })
+        e.target.value = ''
       }
     }
   }
@@ -73,7 +75,7 @@ class App extends Component {
         </header>
         <div className="App-intro">
           {this.displayQuestion()}
-          <input className="App-input" type="text" onChange={e => this.answer(e.target.value)}/>
+          <input className="App-input" type="text" onChange={e => this.answer(e)}/>
         </div>
       </div>
     );
