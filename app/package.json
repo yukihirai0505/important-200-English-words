@@ -2,6 +2,7 @@
   "name": "app",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://yukihirai0505.github.io/important-200-English-words/app/build",
   "dependencies": {
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
