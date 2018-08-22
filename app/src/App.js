@@ -12,7 +12,8 @@ class App extends Component {
       currentQuestion: {
         level: '',
         word: '',
-        example: ''
+        example: '',
+        translation: ''
       },
       words: []
     }
@@ -50,12 +51,14 @@ class App extends Component {
     if (currentQuestion) {
       let level = currentQuestion.level,
         word = currentQuestion.word,
-        example = currentQuestion.example.replace(word.slice(2), '<span class="App-attention">______</span>')
+        example = currentQuestion.example.replace(word.slice(2), '<span class="App-attention">______</span>'),
+        translation = currentQuestion.translation
 
       return (
         <div>
           <p>レベル: {level}</p>
           <p>{currentNum + 1}問目 <span dangerouslySetInnerHTML={{__html: example}}/></p>
+          <p>{translation}</p>
         </div>
       );
     }
