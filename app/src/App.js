@@ -28,7 +28,7 @@ class App extends Component {
   setQuestions() {
     const {currentNum} = this.state
     getQuestions().then(questions => {
-      let _questions = shuffleArray(questions).slice(0, 3);
+      let _questions = shuffleArray(questions);
       let currentQuestion = _questions[currentNum]
       this.setState({
         currentQuestion,
