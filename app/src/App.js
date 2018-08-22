@@ -20,6 +20,7 @@ class App extends Component {
       },
       correctFlg: false,
       showAnswerFlg: false,
+      finishFlg: false,
       questions: []
     }
   }
@@ -27,7 +28,7 @@ class App extends Component {
   setQuestions() {
     const {currentNum} = this.state
     getQuestions().then(questions => {
-      let _questions = shuffleArray(questions);
+      let _questions = shuffleArray(questions).slice(0, 3);
       let currentQuestion = _questions[currentNum]
       this.setState({
         currentQuestion,
@@ -51,18 +52,20 @@ class App extends Component {
     if (currentQuestion) {
       if (input === currentQuestion.word) {
         this.setState({correctFlg: true})
-        // TODO: check final answer or not
-
-        setTimeout(() => {
-          let nextNum = currentNum + 1
-          this.setState({
-            currentNum: nextNum,
-            currentQuestion: questions[nextNum],
-            correctFlg: false,
-            showAnswerFlg: false
-          })
-          e.target.value = ''
-        }, 1000);
+        let nextNum = currentNum + 1
+        if (nextNum === questions.length) {
+          this.setState({finishFlg: true});
+        } else {
+          setTimeout(() => {
+            this.setState({
+              currentNum: nextNum,
+              currentQuestion: questions[nextNum],
+              correctFlg: false,
+              showAnswerFlg: false
+            })
+            e.target.value = ''
+          }, 1000);
+        }
       }
     }
   }
@@ -90,7 +93,7 @@ class App extends Component {
   }
 
   render() {
-    const {correctFlg, showAnswerFlg} = this.state
+    const {correctFlg, showAnswerFlg, finishFlg} = this.state
     let fontAwesome = correctFlg ?
       {
         icon: 'check-circle',
@@ -106,6 +109,9 @@ class App extends Component {
           <h1 className="App-title">Important 200 English words</h1>
         </header>
         <div className="App-intro">
+          {finishFlg &&
+          <p>お疲れ様でした</p>
+          }
           {this.displayQuestion()}
           <FontAwesomeIcon icon={fontAwesome.icon} className={fontAwesome.className + ' App-input-icon'}/>
           <input className="App-input" type="text" onChange={e => this.answer(e)}/>
