@@ -82,21 +82,35 @@ class App extends Component {
   }
 
   displayQuestion() {
-    const {currentNum, currentQuestion, showAnswerFlg} = this.state
+    const {currentNum, currentQuestion, showAnswerFlg, correctFlg} = this.state
     if (currentQuestion) {
       let level = currentQuestion.level,
         word = currentQuestion.word,
         japanese = currentQuestion.japanese,
         example = currentQuestion.example.replace(word.slice(2), '<span class="App-attention">______</span>'),
-        translation = currentQuestion.translation
-
+        translation = currentQuestion.translation,
+        fontAwesome = correctFlg ?
+          {
+            icon: 'check-circle',
+            className: 'App-success'
+          } : {
+            icon: 'check',
+            className: 'App-attention'
+          }
       return (
         <div>
           <p>レベル: {level}</p>
           <p>{currentNum + 1}問目 <span dangerouslySetInnerHTML={{__html: example}}/></p>
           <p>{translation}</p>
+          <FontAwesomeIcon icon={fontAwesome.icon} className={fontAwesome.className + ' App-input-icon'}/>
+          <input className="App-input" type="text" onChange={e => this.answer(e)}/>
+          {!showAnswerFlg &&
+          <div>
+            <button className="App-show-btn" onClick={() => this.checkAnswer()}>答えを見る</button>
+          </div>
+          }
           {showAnswerFlg &&
-          <p>答え: {word}<br/>意味: {japanese}</p>
+          <p>答え: {word} ... {japanese}</p>
           }
         </div>
       );
@@ -116,15 +130,7 @@ class App extends Component {
   }
 
   render() {
-    const {correctFlg, showAnswerFlg, finishFlg} = this.state
-    let fontAwesome = correctFlg ?
-      {
-        icon: 'check-circle',
-        className: 'App-success'
-      } : {
-        icon: 'check',
-        className: 'App-attention'
-      }
+    const {finishFlg} = this.state
     return (
       <div className="App">
         <header className="App-header">
@@ -136,11 +142,6 @@ class App extends Component {
           <p>お疲れ様でした</p>
           }
           {this.displayQuestion()}
-          <FontAwesomeIcon icon={fontAwesome.icon} className={fontAwesome.className + ' App-input-icon'}/>
-          <input className="App-input" type="text" onChange={e => this.answer(e)}/>
-          {!showAnswerFlg &&
-          <button className="App-show-btn" onClick={() => this.checkAnswer()}>答えを見る</button>
-          }
           {this.renderPhotos()}
         </div>
       </div>
