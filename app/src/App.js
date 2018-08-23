@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import logo from './logo.svg'
 import './App.css'
-import {getQuestions, getPhotos} from './utils/api'
+import {getQuestions, getImageUrls} from './utils/api'
 import {shuffleArray} from './utils/shuffle'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 
@@ -22,7 +22,7 @@ class App extends Component {
       showAnswerFlg: false,
       finishFlg: false,
       questions: [],
-      photos: []
+      imageUrls: []
     }
   }
 
@@ -43,9 +43,8 @@ class App extends Component {
   }
 
   setPhotos(keyword) {
-    getPhotos(keyword).then(data => {
-      let photos = data.info.photo
-      this.setState({photos});
+    getImageUrls(keyword).then(imageUrls => {
+      this.setState({imageUrls});
     })
   }
 
@@ -118,12 +117,12 @@ class App extends Component {
   }
 
   renderPhotos() {
-    const {photos} = this.state
-    if (Array.isArray(photos)) {
-      return photos.map((photo) => {
-        console.log(photo)
+    const {imageUrls} = this.state
+    if (Array.isArray(imageUrls)) {
+      return imageUrls.map((imageUrl) => {
+        console.log(imageUrl)
         return (
-          <img src={photo.image_url} alt=""/>
+          <img src={imageUrl} alt=""/>
         )
       })
     }
