@@ -12,12 +12,13 @@ async function getQuestions() {
 async function getImageUrls(keyword, service = 'flickr') {
   let url = `${baseUrl}?keyword=${keyword}`,
     res = await axios.get(`${url}&service=${service}`),
-    data = res.data
-  return service === 'flickr' ?
-    data.photos.photo.map((v) => {
-      return v.url_n;
-    }) :
-    data.info.photo.map((v) => {
-      return v.image_url
-    })
+    data = res.data,
+    imageUrls = service === 'flickr' ?
+      data.photos.photo.map((v) => {
+        return v.url_n;
+      }) :
+      data.info.photo.map((v) => {
+        return v.image_url
+      })
+  return imageUrls.filter(v => v).slice(0, 20);
 }

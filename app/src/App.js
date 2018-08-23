@@ -37,12 +37,12 @@ class App extends Component {
           currentQuestion,
           questions: _questions,
         });
-        this.setPhotos(keyword)
+        this.setImageUrls(keyword)
       }
     });
   }
 
-  setPhotos(keyword) {
+  setImageUrls(keyword) {
     getImageUrls(keyword).then(imageUrls => {
       this.setState({imageUrls});
     })
@@ -70,9 +70,9 @@ class App extends Component {
               currentQuestion: nextQuestin,
               correctFlg: false,
               showAnswerFlg: false,
-              photos: []
+              imageUrls: []
             })
-            this.setPhotos(nextQuestin.word)
+            this.setImageUrls(nextQuestin.word)
             e.target.value = ''
           }, 500);
         }
@@ -143,6 +143,7 @@ class App extends Component {
           {this.displayQuestion()}
           <div className="App-photo">
             {this.renderPhotos()}
+            <p>Images by Flickr API</p>
           </div>
         </div>
       </div>

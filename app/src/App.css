@@ -79,6 +79,9 @@
 /* Photos */
 
 .App-photo img {
+  width: 250px;
+  height: 250px;
+  object-fit: cover;
   padding:5px;
   opacity:0.8;
   filter:alpha(opacity=80);
